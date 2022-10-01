@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageCard from "../components/cards/ImageCard";
 import FeedbackModal from "../components/modals/FeedbackModal";
 import Navigationbar from "../components/navigation/Navigationbar";
 import Tag from "../components/Tag";
+import { motion, AnimatePresence } from "framer-motion";
 import { useGetPhotosQuery } from "../features/photos/photoApi";
 
 const Home = () => {
 	const { data: photos, isLoading, isError, error } = useGetPhotosQuery();
 	const [tag, setTag] = useState("");
+	const [filtered, setFiltered] = useState([]);
 	const tags = ["", "history", "animal", "architecture", "nature", "fashion"];
+
+	useEffect(() => {
+		setFiltered(
+			photos?.filter((photo) => (tag === "" ? true : photo.tag === tag))
+		);
+	}, [tag, photos]);
 
 	const handleTagChange = (value) => {
 		setTag(value === "all" ? "" : value);
@@ -29,13 +37,17 @@ const Home = () => {
 						/>
 					))}
 				</div>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-					{photos
-						?.filter((photo) => (tag === "" ? true : photo.tag === tag))
-						.map((photo) => (
+				
+				<motion.div
+					layout
+					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8"
+				>
+					<AnimatePresence>
+						{filtered?.map((photo) => (
 							<ImageCard key={photo.id} image={photo} />
 						))}
-				</div>
+					</AnimatePresence>
+				</motion.div>
 			</div>
 		</>
 	);

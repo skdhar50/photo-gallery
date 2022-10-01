@@ -1,14 +1,21 @@
+import userIcon from "../../assets/userDemo.png";
+import { motion } from "framer-motion";
 
-import userIcon from "../../assets/userDemo.png"
-
-const ImageCard = ({image}) => {
-	// console.log(image)
-  return (
-		<div
-			className={`bg-gray-300 rounded-sm drop-shadow-xl overflow-hidden relative hover:scale-105 transition-all duration-200`}
+const ImageCard = ({ image }) => {
+	return (
+		<motion.div
+			layout
+			animate={{ opacity: 1 }}
+			initial={{ opacity: 0 }}
+			exit={{ opacity: 0 }}
+			className={`bg-gray-300 rounded-sm drop-shadow-xl overflow-hidden relative `}
 		>
 			<div className="absolute top-0 right-0 left-0 bg-white/80 p-3 flex gap-3 shadow-lg">
-				<img src={userIcon} alt="" className="shrink-0 rounded-full bg-gray-500 w-[40px] h-[40px]"></img>
+				<img
+					src={userIcon}
+					alt=""
+					className="shrink-0 rounded-full bg-gray-500 w-[40px] h-[40px]"
+				></img>
 				<div className="text-gray-500">
 					<p className="text-xs">
 						by <span className="font-medium text-sm">Sanjoy Kumar Dhar</span>
@@ -38,8 +45,8 @@ const ImageCard = ({image}) => {
 				</svg>
 				<p className="text-sm">32 feedbacks</p>
 			</div>
-		</div>
+		</motion.div>
 	);
-}
+};
 
-export default ImageCard
+export default ImageCard;
