@@ -1,7 +1,8 @@
-import Image from "../../assets/nature-1.jpg"
+
 import userIcon from "../../assets/userDemo.png"
 
-const ImageCard = () => {
+const ImageCard = ({image}) => {
+	// console.log(image)
   return (
 		<div
 			className={`bg-gray-300 rounded-sm drop-shadow-xl overflow-hidden relative hover:scale-105 transition-all duration-200`}
@@ -16,7 +17,7 @@ const ImageCard = () => {
 				</div>
 			</div>
 			<img
-				src={Image}
+				src={image?.link}
 				alt=""
 				className="w-[280px] h-[380px] object-cover cursor-pointer"
 			/>
