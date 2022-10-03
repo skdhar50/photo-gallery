@@ -5,7 +5,10 @@ export const photoApi = apiSlice.injectEndpoints({
 		getPhotos: builder.query({
 			query: () => "/photos",
 		}),
+		getPhoto: builder.query({
+			query: (id) => `/photos/${id}`,
+		}),
 	}),
 });
 
-export const { useGetPhotosQuery } = photoApi;
+export const { useGetPhotosQuery, useGetPhotoQuery } = photoApi;

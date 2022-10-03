@@ -1,30 +1,40 @@
-import userIcon from "../../assets/userDemo.png";
 import { motion } from "framer-motion";
 
-const ImageCard = ({ image }) => {
+const ImageCard = ({ image, onModalOpen }) => {
+	const { id, link, tag, uploaded_by, uploaded_at } = image || {};
+	const { name, profile_photo } = uploaded_by || {};
+
 	return (
 		<motion.div
 			layout
 			animate={{ opacity: 1 }}
 			initial={{ opacity: 0 }}
 			exit={{ opacity: 0 }}
+			whileHover={{ scale: 1.04 }}
+			whileTap={{ scale: 0.9 }}
 			className={`bg-gray-300 rounded-sm drop-shadow-xl overflow-hidden relative `}
+			onClick={() => onModalOpen(id)} 
 		>
-			<div className="absolute top-0 right-0 left-0 bg-white/80 p-3 flex gap-3 shadow-lg">
+			<div className="absolute top-0 right-0 left-0 bg-white/90 p-3 flex gap-3 shadow-lg">
 				<img
-					src={userIcon}
+					src={profile_photo}
 					alt=""
 					className="shrink-0 rounded-full bg-gray-500 w-[40px] h-[40px]"
 				></img>
-				<div className="text-gray-500">
+				<div className="text-gray-500 w-full">
 					<p className="text-xs">
-						by <span className="font-medium text-sm">Sanjoy Kumar Dhar</span>
+						by <span className="font-medium text-sm">{name}</span>
 					</p>
-					<p className="text-xs pt-1">on 22 Sep, 2022</p>
+					<div className="flex justify-between text-xs pt-1 w-full">
+						<p className="">on {uploaded_at}</p>
+						<p className="px-3 py-0.5 bg-gradient-to-tr from-pink-400 to-pink-600 text-white rounded-full drop-shadow-lg antialiased font-medium">
+							{tag}
+						</p>
+					</div>
 				</div>
 			</div>
 			<img
-				src={image?.link}
+				src={link}
 				alt=""
 				className="w-[280px] h-[380px] object-cover cursor-pointer"
 			/>
