@@ -30,7 +30,36 @@ export const authApi = apiSlice.injectEndpoints({
 				} catch (e) {}
 			},
 		}),
+		register: builder.mutation({
+			query: (data) => ({
+				url: "/register",
+				method: "POST",
+				body: data,
+			}),
+			async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+				try {
+					const result = await queryFulfilled;
+
+					localStorage.setItem(
+						"auth",
+						JSON.stringify({
+							accessToken: result.data.accessToken,
+							user: result.data.user,
+						})
+					);
+
+					dispatch(
+						userLoggedIn({
+							accessToken: result.data.accessToken,
+							user: result.data.user,
+						})
+					);
+				} catch (e) {
+					// Some error occurred
+				}
+			},
+		}),
 	}),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation } = authApi;
