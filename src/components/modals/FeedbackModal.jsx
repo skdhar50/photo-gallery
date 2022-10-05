@@ -1,14 +1,50 @@
 import Feedback from "../feedback/Feedback";
 import FeedbackOptions from "../feedback/FeedbackOptions";
-import reactionIcon from "../../assets/icons/care.svg";
 import { useGetPhotoQuery } from "../../features/photos/photoApi";
 import { motion } from "framer-motion";
+import { useGetFeedbacksQuery } from "../../features/feedback/feedbackApi";
+import countReactions from "../../utilities/countReactions";
+import getReactionIcon from "../../utilities/reactions";
 
 const FeedbackModal = ({ isShow, onModalClose, id }) => {
-	const { data: photo, isLoading, isError, error } = useGetPhotoQuery(id);
+	const {
+		data: photo,
+		isLoading: photoLoading,
+		isError: photoIsError,
+		error: photoError,
+	} = useGetPhotoQuery(id);
+	const {
+		data: feedbacks,
+		isLoading: feedbacksLoading,
+		isError: feedbackIsError,
+		error: feedbackError,
+	} = useGetFeedbacksQuery(id);
 
 	const { link, tag, uploaded_at, uploaded_by } = photo || {};
 	const { name, profile_photo } = uploaded_by || {};
+	const reactions = countReactions(feedbacks);
+
+	// conditionally setting the feedback content
+	let feedbackContent = null;
+	if (feedbacksLoading) {
+		feedbackContent = (
+			<div className="text-gray-500 flex justify-center items-center pt-3">
+				Loading feedback ....
+			</div>
+		);
+	} else if (!feedbacksLoading && feedbackIsError) {
+		feedbackContent = <div className="">{feedbackError}</div>;
+	} else if (!feedbacksLoading && !feedbackIsError && feedbacks.length === 0) {
+		feedbackContent = (
+			<div className="text-gray-500 flex justify-center items-center pt-3">
+				No feedbacks found!
+			</div>
+		);
+	} else {
+		feedbackContent = feedbacks.map((feedback) => (
+			<Feedback key={feedback.id} feedback={feedback} />
+		));
+	}
 
 	return (
 		<div className="bg-black/60 z-40 fixed  h-screen w-full flex flex-col justify-center items-center overflow-auto">
@@ -18,7 +54,7 @@ const FeedbackModal = ({ isShow, onModalClose, id }) => {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: 1000, opacity: 0 }}
 				transition={{ duration: 0.4 }}
-				className="bg-white relative z-40 p-4 md:p-6 w-full md:w-3/4 xl:w-2/4 h-fit rounded flex flex-col items-center md:flex-row gap-6 overflow-y-auto"
+				className="bg-white relative z-40 p-4 md:p-6 w-full md:w-3/4 xl:w-2/4 h-[560px] rounded flex flex-col items-center md:flex-row gap-6 overflow-y-auto"
 			>
 				<div className="absolute top-3 right-4">
 					<svg
@@ -58,28 +94,28 @@ const FeedbackModal = ({ isShow, onModalClose, id }) => {
 
 					<div className="flex justify-between items-center pt-2 px-2">
 						<div className="flex items-center gap-2">
-							<img src={reactionIcon} alt="" className="h-5 w-5" />
-							<p className="text-gray-600 text-sm">162</p>
+							<img src={getReactionIcon("wow")} alt="" className="h-5 w-5" />
+							<p className="text-gray-600 text-sm">{reactions?.wow}</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<img src={reactionIcon} alt="" className="h-5 w-5" />
-							<p className="text-gray-600 text-sm">162</p>
+							<img src={getReactionIcon("care")} alt="" className="h-5 w-5" />
+							<p className="text-gray-600 text-sm">{reactions?.care}</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<img src={reactionIcon} alt="" className="h-5 w-5" />
-							<p className="text-gray-600 text-sm">162</p>
+							<img src={getReactionIcon("sad")} alt="" className="h-5 w-5" />
+							<p className="text-gray-600 text-sm">{reactions?.sad}</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<img src={reactionIcon} alt="" className="h-5 w-5" />
-							<p className="text-gray-600 text-sm">162</p>
+							<img src={getReactionIcon("angry")} alt="" className="h-5 w-5" />
+							<p className="text-gray-600 text-sm">{reactions?.angry}</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<img src={reactionIcon} alt="" className="h-5 w-5" />
-							<p className="text-gray-600 text-sm">162</p>
+							<img src={getReactionIcon("haha")} alt="" className="h-5 w-5" />
+							<p className="text-gray-600 text-sm">{reactions?.haha}</p>
 						</div>
 					</div>
 				</div>
-				<div className="md:flex-grow w-full space-y-4">
+				<div className="w-full h-[calc(100%-40px)] flex flex-col space-y-4">
 					<div className="space-y-3">
 						<p className="text-gray-600 text-lg tracking-wider border-b border-gray-200 pb-1 mb-4">
 							Give your feedback
@@ -87,24 +123,8 @@ const FeedbackModal = ({ isShow, onModalClose, id }) => {
 
 						<FeedbackOptions photoId={id} />
 					</div>
-					<div className="bg-gray-50 w-full border max-h-[300px] md:max-h-[350px] px-2 md:px-4 py-2 overflow-y-auto space-y-3">
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
-						<Feedback />
+					<div className="bg-gray-50 flex-grow w-full border max-h-full px-2 md:px-4 py-2 overflow-y-auto space-y-3">
+						{feedbackContent}
 					</div>
 				</div>
 			</motion.div>

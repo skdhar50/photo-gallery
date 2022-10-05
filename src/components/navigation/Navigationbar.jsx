@@ -1,7 +1,9 @@
 const Navigationbar = () => {
 	return (
 		<div className="fixed py-4 bg-white/90 w-full top-0 z-10 shadow-md md:px-12 flex items-center justify-between">
-			<div className="">Logo</div>
+			<div className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+				Logo
+			</div>
 			<div className="flex items-center gap-2 text-gray-600">
 				<img
 					src="https://randomuser.me/api/portraits/med/men/81.jpg"

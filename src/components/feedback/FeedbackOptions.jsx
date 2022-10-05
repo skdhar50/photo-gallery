@@ -26,15 +26,17 @@ const FeedbackOptions = ({ photoId }) => {
 		e.preventDefault();
 
 		postFeedback({
-			photoId: photoId,
-			feedback: selectedOption,
-			user: {
-				name: "Sanjoy Kumar Dhar",
-				email: "sanjoy.dhar@gmail.com",
+			id: photoId,
+			data: {
+				photoId: photoId,
+				feedback: selectedOption,
+				user: {
+					name: "Sanjoy Kumar Dhar",
+					email: "sanjoy.dhar@gmail.com",
+				},
+				givenAt: Date.now(),
 			},
-			givenAt: Date.now(),
 		});
-		console.log(selectedOption);
 	};
 
 	return (
