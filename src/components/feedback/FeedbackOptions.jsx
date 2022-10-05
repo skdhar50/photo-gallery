@@ -6,10 +6,12 @@ import Wow from "../../assets/icons/wow.svg";
 import { useState } from "react";
 import FeedbackOption from "./FeedbackOption";
 import { usePostFeedbackMutation } from "../../features/feedback/feedbackApi";
+import { useSelector } from "react-redux";
 
 const FeedbackOptions = ({ photoId }) => {
 	const [selectedOption, setSelectedOption] = useState("");
 	const [postFeedback, { isLoading }] = usePostFeedbackMutation();
+	const {user} = useSelector(state => state.auth)
 	const options = [
 		{ name: "wow", img: Wow },
 		{ name: "care", img: Care },
@@ -30,10 +32,7 @@ const FeedbackOptions = ({ photoId }) => {
 			data: {
 				photoId: photoId,
 				feedback: selectedOption,
-				user: {
-					name: "Sanjoy Kumar Dhar",
-					email: "sanjoy.dhar@gmail.com",
-				},
+				user: user,
 				givenAt: Date.now(),
 			},
 		});

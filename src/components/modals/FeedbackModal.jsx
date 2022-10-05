@@ -5,8 +5,12 @@ import { motion } from "framer-motion";
 import { useGetFeedbacksQuery } from "../../features/feedback/feedbackApi";
 import countReactions from "../../utilities/countReactions";
 import getReactionIcon from "../../utilities/reactions";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
-const FeedbackModal = ({ isShow, onModalClose, id }) => {
+const FeedbackModal = ({ onModalClose, id }) => {
+	const { user } = useSelector((state) => state.auth);
+	const [isFeedbacked, setIsFeedbacked] = useState(false);
 	const {
 		data: photo,
 		isLoading: photoLoading,
@@ -19,6 +23,14 @@ const FeedbackModal = ({ isShow, onModalClose, id }) => {
 		isError: feedbackIsError,
 		error: feedbackError,
 	} = useGetFeedbacksQuery(id);
+
+	useEffect(() => {
+		feedbacks?.forEach((feedback) => {
+			if (feedback?.user?.email === user?.email) {
+				setIsFeedbacked(true);
+			}
+		});
+	}, [feedbacks, user]);
 
 	const { link, tag, uploaded_at, uploaded_by } = photo || {};
 	const { name, profile_photo } = uploaded_by || {};
@@ -116,13 +128,15 @@ const FeedbackModal = ({ isShow, onModalClose, id }) => {
 					</div>
 				</div>
 				<div className="w-full h-[calc(100%-40px)] flex flex-col space-y-4">
-					<div className="space-y-3">
-						<p className="text-gray-600 text-lg tracking-wider border-b border-gray-200 pb-1 mb-4">
-							Give your feedback
-						</p>
+					{!isFeedbacked && (
+						<div className="space-y-3">
+							<p className="text-gray-600 text-lg tracking-wider border-b border-gray-200 pb-1 mb-4">
+								Give your feedback
+							</p>
 
-						<FeedbackOptions photoId={id} />
-					</div>
+							<FeedbackOptions photoId={id} />
+						</div>
+					)}
 					<div className="bg-gray-50 flex-grow w-full border max-h-full px-2 md:px-4 py-2 overflow-y-auto space-y-3">
 						{feedbackContent}
 					</div>
