@@ -66,7 +66,7 @@ const FeedbackModal = ({ onModalClose, id }) => {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: 1000, opacity: 0 }}
 				transition={{ duration: 0.4 }}
-				className="bg-white relative z-40 p-4 md:p-6 w-full md:w-3/4 xl:w-2/4 h-[560px] rounded flex flex-col items-center md:flex-row gap-6 overflow-y-auto"
+				className="bg-white relative z-40 p-4 md:p-6 w-full h-fit md:w-3/4 xl:w-2/4 md:h-[560px] rounded flex flex-col items-center md:flex-row gap-6 overflow-y-auto"
 			>
 				<div className="absolute top-3 right-4">
 					<svg
