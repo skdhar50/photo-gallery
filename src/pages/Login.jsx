@@ -1,9 +1,40 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "../assets/images/login.png";
 import PrimaryButton from "../components/buttons/PrimaryButton";
 import Input from "../components/form/Input";
+import { useLoginMutation } from "../features/auth/authApi";
 
 const Login = () => {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
+
+	const [login, { data, isLoading, isError, error: responseError }] =
+		useLoginMutation();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (responseError?.data) {
+			setError(responseError.data);
+		}
+		if (data?.accessToken && data?.user) {
+			setEmail("");
+			setPassword("");
+			navigate("/home");
+		}
+	}, [data, responseError, navigate]);
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		setError("");
+		login({
+			email,
+			password,
+		});
+	};
+
 	return (
 		<div className="flex h-screen justify-center items-center px-4">
 			<div className="bg-gray-50 w-full md:w-fit p-8 rounded flex items-center justify-center gap-4 drop-shadow-xl border">
@@ -12,11 +43,12 @@ const Login = () => {
 						<p className="text-2xl font-semibold text-[#056AA3]">Welcome</p>
 					</div>
 					<div className="flex flex-col items-center space-y-8">
-						<form action="" className="flex flex-col space-y-4">
+						<form onSubmit={handleSubmit} className="flex flex-col space-y-4">
 							<Input
 								type="email"
 								required={true}
 								name="email"
+								changeHandler={setEmail}
 								placeholder="Enter your email"
 							/>
 							<div className="">
@@ -24,6 +56,7 @@ const Login = () => {
 									type="password"
 									required={true}
 									name="password"
+									changeHandler={setPassword}
 									placeholder="Enter your password"
 								/>
 
@@ -32,7 +65,12 @@ const Login = () => {
 								</p>
 							</div>
 
-							<PrimaryButton title="Sign in" />
+							<PrimaryButton title="Sign in" disabled={isLoading} />
+							{isError && (
+								<div className="text-sm text-rose-600 text-center bg-rose-100 py-1 rounded">
+									{error}
+								</div>
+							)}
 						</form>
 
 						<div className="text-sm text-gray-600 italic">

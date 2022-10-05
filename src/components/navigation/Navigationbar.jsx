@@ -1,4 +1,15 @@
+import { useDispatch, useSelector } from "react-redux";
+import { userLoggedOut } from "../../features/auth/authSlice";
+
 const Navigationbar = () => {
+	const { user } = useSelector((state) => state.auth) || {};
+	const dispatch = useDispatch();
+
+	const logout = () => {
+		dispatch(userLoggedOut());
+		localStorage.clear();
+	};
+
 	return (
 		<div className="fixed py-4 bg-white/90 w-full top-0 z-10 shadow-md md:px-12 flex items-center justify-between">
 			<div className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
@@ -6,11 +17,11 @@ const Navigationbar = () => {
 			</div>
 			<div className="flex items-center gap-2 text-gray-600">
 				<img
-					src="https://randomuser.me/api/portraits/med/men/81.jpg"
+					src={user?.image}
 					alt=""
 					className="w-8 h-8 rounded-full object-cover"
 				/>
-				<p className="">Sanjoy Kumar Dhar</p>
+				<p className="">{user?.name}</p>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -18,6 +29,7 @@ const Navigationbar = () => {
 					strokeWidth="1.5"
 					stroke="currentColor"
 					className="w-6 h-6 ml-4 hover:cursor-pointer hover:text-rose-500"
+					onClick={logout}
 				>
 					<path
 						strokeLinecap="round"
