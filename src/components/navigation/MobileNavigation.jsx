@@ -1,16 +1,16 @@
-import React from "react";
 import { useSelector } from "react-redux";
 
-const MobileNavigation = ({ onClose, isOpen }) => {
+const MobileNavigation = ({ onClose, isOpen, onLogout }) => {
 	const { user } = useSelector((state) => state.auth);
 	const { name, image } = user || {};
+
 	return (
 		<div className="">
 			<div
 				className={`${
 					isOpen ? "bg-black/60 h-screen fixed right-0 top-0 z-50 w-full" : ""
 				}`}
-                onClick={onClose}
+				onClick={onClose}
 			></div>
 			<div
 				className={`bg-gray-50 absolute right-0 top-0 w-3/4 h-screen z-[60] ${
@@ -45,7 +45,10 @@ const MobileNavigation = ({ onClose, isOpen }) => {
 						<p className="text-gray-600">{name}</p>
 					</div>
 
-					<div className="absolute flex gap-3 items-center px-6 bottom-0 border-t-2 bg-stone-50 w-full py-2.5 left-0 text-gray-600">
+					<div
+						className="absolute flex gap-3 items-center px-6 bottom-0 border-t-2 bg-stone-50 w-full py-2.5 left-0 text-gray-600"
+						onClick={onLogout}
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"

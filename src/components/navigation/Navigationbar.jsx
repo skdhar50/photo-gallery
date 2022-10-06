@@ -62,8 +62,12 @@ const Navigationbar = () => {
 						d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
 					/>
 				</svg>
-				
-				<MobileNavigation onClose={handleSidebar} isOpen={sidebar} />
+
+				<MobileNavigation
+					onClose={handleSidebar}
+					isOpen={sidebar}
+					onLogout={logout}
+				/>
 			</div>
 		</div>
 	);
